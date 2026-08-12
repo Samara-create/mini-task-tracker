@@ -1,7 +1,48 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 
 const API_URL = "http://localhost:5000";
 const STATUSES = ["To Do", "In Progress", "Done"];
+
+function ProgressRing({ done, total }) {
+  const size = 56;
+  const stroke = 5;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const pct = total === 0 ? 0 : done / total;
+  const offset = circumference * (1 - pct);
+
+  return (
+    <div className="ring-wrap">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="var(--line)"
+          strokeWidth={stroke}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+          className="ring-progress"
+        />
+      </svg>
+      <div className="ring-label">
+        <strong>{done}</strong>
+        <span>/{total}</span>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
@@ -100,8 +141,18 @@ export default function App() {
   return (
     <div className="page">
       <header>
-        <h1>Mini Task Tracker</h1>
-        <p className="subtitle">Create, track, and manage your tasks</p>
+        <div className="header-top">
+          <div>
+            <h1>Mini Task Tracker</h1>
+            <p className="subtitle">Every task, one honest status.</p>
+          </div>
+          {!loading && tasks.length > 0 && (
+            <ProgressRing
+              done={tasks.filter((t) => t.status === "Done").length}
+              total={tasks.length}
+            />
+          )}
+        </div>
       </header>
 
       <form className="task-form" onSubmit={handleCreate}>
@@ -136,17 +187,39 @@ export default function App() {
       {loading ? (
         <p className="empty">Loading tasks...</p>
       ) : tasks.length === 0 ? (
-        <p className="empty">No tasks yet. Add one above.</p>
+        <div className="empty-state">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <rect
+              x="6"
+              y="4"
+              width="28"
+              height="32"
+              rx="3"
+              stroke="var(--muted)"
+              strokeWidth="1.6"
+            />
+            <path
+              d="M13 14h14M13 20h14M13 26h9"
+              stroke="var(--muted)"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+          </svg>
+          <p>Nothing tracked yet. Add your first task above.</p>
+        </div>
       ) : (
         <ul className="task-list">
           {tasks.map((task) => (
-            <li key={task.id} className="task-card">
+            <li key={task.id} className="task-card" data-status={task.status}>
+              {task.status === "Done" && <span className="stamp">Done</span>}
               <div className="task-main">
                 <h3>{task.title}</h3>
                 {task.description && <p>{task.description}</p>}
               </div>
               <div className="task-actions">
                 <select
+                  className="status-select"
+                  data-status={task.status}
                   value={task.status}
                   onChange={(e) => updateStatus(task.id, e.target.value)}
                 >

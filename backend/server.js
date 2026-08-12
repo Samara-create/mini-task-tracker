@@ -1,5 +1,8 @@
+﻿require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const sequelize = require("./config/database");
+const Task = require("./models/Task");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -7,101 +10,96 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const VALID_STATUSES = ["To Do", "In Progress", "Done"];
-
-// In-memory store. Resets whenever the server restarts.
-let tasks = [
-  {
-    id: 1,
-    title: "Welcome to your Mini Task Tracker",
-    description: "This is a sample task. Edit its status or delete it.",
-    status: "To Do",
-    createdAt: new Date().toISOString(),
-  },
-];
-let nextId = 2;
-
-function findTask(id) {
-  return tasks.find((t) => t.id === Number(id));
+async function start() {
+  try {
+    await sequelize.authenticate();
+    console.log("Connected to MySQL");
+    await sequelize.sync();
+    app.listen(PORT, () => {
+      console.log(`Mini Task Tracker backend listening on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("Could not connect to MySQL:", err.message);
+    process.exit(1);
+  }
 }
 
-// GET /tasks - list all tasks
-app.get("/tasks", (req, res) => {
-  res.json(tasks);
-});
-
-// GET /tasks/:id - get a single task
-app.get("/tasks/:id", (req, res) => {
-  const task = findTask(req.params.id);
-  if (!task) return res.status(404).json({ error: "Task not found" });
-  res.json(task);
-});
-
-// POST /tasks - create a task
-app.post("/tasks", (req, res) => {
-  const { title, description, status } = req.body || {};
-
-  if (!title || !title.trim()) {
-    return res.status(400).json({ error: "Title is required" });
+function handleSequelizeError(err, res) {
+  if (err.name === "SequelizeValidationError") {
+    const message = err.errors[0]?.message || "Invalid data";
+    return res.status(400).json({ error: message });
   }
-  if (status && !VALID_STATUSES.includes(status)) {
-    return res.status(400).json({
-      error: `Status must be one of: ${VALID_STATUSES.join(", ")}`,
-    });
-  }
+  console.error(err);
+  return res.status(500).json({ error: "Something went wrong" });
+}
 
-  const task = {
-    id: nextId++,
-    title: title.trim(),
-    description: description ? description.trim() : "",
-    status: status || "To Do",
-    createdAt: new Date().toISOString(),
-  };
-  tasks.push(task);
-  res.status(201).json(task);
+app.get("/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.findAll({ order: [["createdAt", "ASC"]] });
+    res.json(tasks);
+  } catch (err) {
+    handleSequelizeError(err, res);
+  }
 });
 
-// PATCH /tasks/:id - update a task's status and/or details
-app.patch("/tasks/:id", (req, res) => {
-  const task = findTask(req.params.id);
-  if (!task) return res.status(404).json({ error: "Task not found" });
+app.get("/tasks/:id", async (req, res) => {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if (!task) return res.status(404).json({ error: "Task not found" });
+    res.json(task);
+  } catch (err) {
+    handleSequelizeError(err, res);
+  }
+});
 
-  const { title, description, status } = req.body || {};
+app.post("/tasks", async (req, res) => {
+  try {
+    const { title, description, status } = req.body || {};
+    if (!title || !title.trim()) {
+      return res.status(400).json({ error: "Title is required" });
+    }
+    const task = await Task.create({ title, description, status });
+    res.status(201).json(task);
+  } catch (err) {
+    handleSequelizeError(err, res);
+  }
+});
 
-  if (title !== undefined) {
-    if (!title.trim()) {
+app.patch("/tasks/:id", async (req, res) => {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if (!task) return res.status(404).json({ error: "Task not found" });
+
+    const { title, description, status } = req.body || {};
+
+    if (title !== undefined && !title.trim()) {
       return res.status(400).json({ error: "Title cannot be empty" });
     }
-    task.title = title.trim();
-  }
-  if (description !== undefined) {
-    task.description = description.trim();
-  }
-  if (status !== undefined) {
-    if (!VALID_STATUSES.includes(status)) {
-      return res.status(400).json({
-        error: `Status must be one of: ${VALID_STATUSES.join(", ")}`,
-      });
-    }
-    task.status = status;
-  }
 
-  res.json(task);
+    if (title !== undefined) task.title = title;
+    if (description !== undefined) task.description = description;
+    if (status !== undefined) task.status = status;
+
+    await task.save();
+    res.json(task);
+  } catch (err) {
+    handleSequelizeError(err, res);
+  }
 });
 
-// DELETE /tasks/:id - delete a task
-app.delete("/tasks/:id", (req, res) => {
-  const index = tasks.findIndex((t) => t.id === Number(req.params.id));
-  if (index === -1) return res.status(404).json({ error: "Task not found" });
-
-  const [deleted] = tasks.splice(index, 1);
-  res.json(deleted);
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if (!task) return res.status(404).json({ error: "Task not found" });
+    await task.destroy();
+    res.json(task);
+  } catch (err) {
+    handleSequelizeError(err, res);
+  }
 });
 
 app.get("/", (req, res) => {
   res.json({ message: "Mini Task Tracker API is running" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Mini Task Tracker backend listening on http://localhost:${PORT}`);
-});
+start();

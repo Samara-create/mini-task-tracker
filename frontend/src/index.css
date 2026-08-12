@@ -1,14 +1,25 @@
+
 :root {
-  --navy: #1a2236;
-  --gold: #c9a84c;
-  --bg: #f6f7fb;
+  --paper: #f5f6f1;
+  --ink: #16241c;
+  --muted: #6b7568;
   --card: #ffffff;
-  --border: #e2e5ec;
-  --text: #1f2430;
-  --muted: #6b7280;
-  --danger: #c0392b;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
+  --line: #dee4d9;
+  --accent: #2f6f4e;
+  --accent-soft: #e3efe6;
+  --amber: #d68a2c;
+  --danger: #b3492f;
+  --danger-soft: #f6e6e1;
+
+  --status-todo: #8a6d3b;
+  --status-todo-bg: #f3ecdc;
+  --status-progress: #2f5f8a;
+  --status-progress-bg: #e4eef6;
+  --status-done: #2f6f4e;
+  --status-done-bg: #e3efe6;
+
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
 }
 
 * {
@@ -17,105 +28,186 @@
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
 }
 
 .page {
-  max-width: 680px;
+  max-width: 700px;
   margin: 0 auto;
-  padding: 40px 20px 80px;
+  padding: 48px 20px 90px;
 }
 
 header {
-  text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 24px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 header h1 {
   margin: 0;
-  color: var(--navy);
-  font-size: 2rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-size: 2.6rem;
+  line-height: 1.05;
 }
 
 .subtitle {
   color: var(--muted);
-  margin-top: 6px;
+  margin: 8px 0 0;
+  font-size: 0.98rem;
+  font-style: italic;
+}
+
+.ring-wrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.ring-wrap svg {
+  transform: scaleX(-1);
+}
+
+.ring-progress {
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.ring-label strong {
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin-right: 1px;
 }
 
 .task-form {
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 2px rgba(28, 32, 25, 0.04);
 }
 
 .field {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .field label {
   display: block;
-  font-size: 0.85rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--navy);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  color: var(--muted);
 }
 
 .field input,
 .field textarea {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
   font-size: 0.95rem;
-  font-family: inherit;
+  font-family: var(--font-body);
+  background: var(--paper);
   resize: vertical;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .field input:focus,
 .field textarea:focus {
   outline: none;
-  border-color: var(--gold);
+  border-color: var(--accent);
+  background: var(--card);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #9a9d8f;
 }
 
 button {
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--font-body);
 }
 
 .task-form button[type="submit"] {
-  background: var(--navy);
-  color: white;
+  background: var(--ink);
+  color: var(--paper);
   border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
+  padding: 11px 20px;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.task-form button[type="submit"]:hover:not(:disabled) {
+  background: var(--amber);
+}
+
+.task-form button[type="submit"]:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .task-form button[type="submit"]:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: default;
 }
 
 .error {
   color: var(--danger);
   font-size: 0.85rem;
-  margin: 6px 0;
+  margin: 6px 0 0;
 }
 
 .error.banner {
-  background: #fdecea;
-  border: 1px solid #f5c6cb;
-  padding: 10px 14px;
-  border-radius: 6px;
+  background: var(--danger-soft);
+  border: 1px solid rgba(179, 73, 47, 0.25);
+  padding: 11px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
 }
 
 .empty {
   text-align: center;
   color: var(--muted);
-  margin-top: 30px;
+  margin-top: 40px;
+  font-size: 0.95rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  color: var(--muted);
+  margin-top: 48px;
+  font-size: 0.95rem;
 }
 
 .task-list {
@@ -124,54 +216,145 @@ button {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .task-card {
+  position: relative;
+  overflow: hidden;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--status-todo);
   border-radius: 10px;
   padding: 16px 18px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
+  transition: border-left-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.task-card:hover {
+  box-shadow: 0 4px 14px rgba(22, 36, 28, 0.08);
+  transform: translateY(-1px);
+}
+
+.stamp {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--status-done);
+  border: 1.5px dashed var(--status-done);
+  border-radius: 999px;
+  padding: 3px 10px;
+  transform: rotate(-8deg);
+  animation: stamp-in 0.25s ease-out;
+  pointer-events: none;
+}
+
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    transform: rotate(-8deg) scale(1.6);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+
+.task-card[data-status="In Progress"] {
+  border-left-color: var(--status-progress);
+}
+
+.task-card[data-status="Done"] {
+  border-left-color: var(--status-done);
 }
 
 .task-main h3 {
   margin: 0 0 4px;
-  color: var(--navy);
-  font-size: 1.05rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.02rem;
+}
+
+.task-card[data-status="Done"] .task-main h3 {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--status-done);
+  text-decoration-thickness: 1.5px;
 }
 
 .task-main p {
   margin: 0;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
 }
 
 .task-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 9px;
   align-items: flex-end;
+  flex-shrink: 0;
 }
 
-.task-actions select {
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  font-size: 0.85rem;
+.status-select {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  appearance: none;
+  text-align: center;
+  padding-right: 24px;
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236f7568' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.status-select[data-status="To Do"] {
+  color: var(--status-todo);
+  background-color: var(--status-todo-bg);
+}
+
+.status-select[data-status="In Progress"] {
+  color: var(--status-progress);
+  background-color: var(--status-progress-bg);
+}
+
+.status-select[data-status="Done"] {
+  color: var(--status-done);
+  background-color: var(--status-done-bg);
 }
 
 .delete-btn {
   background: none;
   border: none;
-  color: var(--danger);
-  font-size: 0.85rem;
+  color: var(--muted);
+  font-size: 0.8rem;
   padding: 0;
+  font-family: var(--font-body);
+  transition: color 0.15s ease;
 }
 
 .delete-btn:hover {
+  color: var(--danger);
   text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }
