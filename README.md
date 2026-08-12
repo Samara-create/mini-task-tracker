@@ -60,12 +60,12 @@ browser.
 
 ## Why this stack
 
-I'm already comfortable and productive in this exact combination — React on
-the frontend and Express on the backend — from building a production
+I'm already comfortable and productive in this exact combination, React on
+the frontend and Express on the backend,  from building a production
 real-estate site (Next.js/Express/PostgreSQL/Sequelize). For a scoped 3–5
-hour assignment I used plain React + Vite instead of Next.js (no routing or
+hour assignment, I used plain React + Vite instead of Next.js (no routing or
 SSR is needed for a single-page tracker). I added MySQL via Sequelize as the
-bonus persistence layer since it's the same ORM pattern I already use in
+bonus persistence layer since it's the same pattern I already use in
 production, and Sequelize's model validation mapped cleanly onto the brief's
 validation requirement (required title, enum status) with very little extra
 code. A `seed.js` script is included so the app can be demoed with realistic
