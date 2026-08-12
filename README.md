@@ -1,4 +1,4 @@
-# Mini Task Tracker
+# mini task tracker
 
 A small full-stack app for creating, viewing, updating, and deleting tasks.
 
