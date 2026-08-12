@@ -1,25 +1,21 @@
-
-:root {
-  --paper: #f5f6f1;
-  --ink: #16241c;
-  --muted: #6b7568;
+﻿:root {
+  --bg: #fdf6ff;
   --card: #ffffff;
-  --line: #dee4d9;
-  --accent: #2f6f4e;
-  --accent-soft: #e3efe6;
-  --amber: #d68a2c;
-  --danger: #b3492f;
-  --danger-soft: #f6e6e1;
+  --ink: #4a3f55;
+  --muted: #a196b3;
+  --line: #f1e5fb;
 
-  --status-todo: #8a6d3b;
-  --status-todo-bg: #f3ecdc;
-  --status-progress: #2f5f8a;
-  --status-progress-bg: #e4eef6;
-  --status-done: #2f6f4e;
-  --status-done-bg: #e3efe6;
+  --pink: #ff8fab;
+  --pink-soft: #ffe3ec;
+  --lavender: #b7a3ff;
+  --lavender-soft: #ece5ff;
+  --butter: #ffcf6b;
+  --butter-soft: #fff3d6;
+  --mint: #6fd6ae;
+  --mint-soft: #e0f7ee;
 
-  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
-  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-display: "Baloo 2", "Segoe UI", sans-serif;
+  --font-body: "Nunito", "Segoe UI", sans-serif;
 }
 
 * {
@@ -28,21 +24,19 @@
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
 }
 
 .page {
-  max-width: 700px;
+  max-width: 660px;
   margin: 0 auto;
-  padding: 48px 20px 90px;
+  padding: 44px 20px 90px;
 }
 
 header {
-  margin-bottom: 32px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 24px;
+  margin-bottom: 26px;
 }
 
 .header-top {
@@ -56,97 +50,98 @@ header h1 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.03em;
-  font-size: 2.6rem;
-  line-height: 1.05;
+  font-size: 2.2rem;
+  color: var(--ink);
+}
+
+.wave {
+  display: inline-block;
+  animation: sway 2.4s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(12deg); }
 }
 
 .subtitle {
   color: var(--muted);
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   font-size: 0.98rem;
-  font-style: italic;
+  font-weight: 600;
 }
 
-.ring-wrap {
-  position: relative;
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0;
-}
-
-.ring-wrap svg {
-  transform: scaleX(-1);
-}
-
-.ring-progress {
-  transition: stroke-dashoffset 0.5s ease;
-}
-
-.ring-label {
-  position: absolute;
-  inset: 0;
+.blob {
+  background: linear-gradient(135deg, var(--pink), var(--lavender));
+  border-radius: 999px;
+  padding: 12px 18px;
   display: flex;
-  align-items: baseline;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  color: var(--muted);
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 6px 14px rgba(183, 163, 255, 0.35);
 }
 
-.ring-label strong {
-  font-size: 0.95rem;
-  color: var(--ink);
-  margin-right: 1px;
+.blob-pct {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.blob-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  opacity: 0.9;
 }
 
 .task-form {
   background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  border: 2px solid var(--line);
+  border-radius: 22px;
   padding: 22px;
-  margin-bottom: 28px;
-  box-shadow: 0 1px 2px rgba(28, 32, 25, 0.04);
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(183, 163, 255, 0.12);
 }
 
 .field {
-  margin-bottom: 16px;
+  margin-bottom: 15px;
 }
 
 .field label {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  margin-bottom: 7px;
-  color: var(--muted);
+  margin-bottom: 6px;
+  color: var(--ink);
 }
 
 .field input,
 .field textarea {
   width: 100%;
-  padding: 11px 13px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: 11px 14px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
   font-size: 0.95rem;
   font-family: var(--font-body);
-  background: var(--paper);
+  background: #fffdff;
   resize: vertical;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
 .field input:focus,
 .field textarea:focus {
   outline: none;
-  border-color: var(--accent);
-  background: var(--card);
+  border-color: var(--pink);
 }
 
 .field input::placeholder,
 .field textarea::placeholder {
-  color: #9a9d8f;
+  color: #c6bcd6;
 }
 
 button {
@@ -155,22 +150,24 @@ button {
 }
 
 .task-form button[type="submit"] {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--pink);
+  color: white;
   border: none;
-  padding: 11px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: background 0.15s ease, transform 0.1s ease;
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  transition: transform 0.12s ease, background 0.15s ease;
 }
 
 .task-form button[type="submit"]:hover:not(:disabled) {
-  background: var(--amber);
+  background: #ff7196;
+  transform: translateY(-1px);
 }
 
 .task-form button[type="submit"]:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .task-form button[type="submit"]:disabled {
@@ -179,16 +176,17 @@ button {
 }
 
 .error {
-  color: var(--danger);
+  color: #d1487a;
   font-size: 0.85rem;
   margin: 6px 0 0;
+  font-weight: 600;
 }
 
 .error.banner {
-  background: var(--danger-soft);
-  border: 1px solid rgba(179, 73, 47, 0.25);
-  padding: 11px 14px;
-  border-radius: 8px;
+  background: var(--pink-soft);
+  border: 2px solid #ffc9d9;
+  padding: 11px 16px;
+  border-radius: 14px;
   margin-bottom: 16px;
 }
 
@@ -196,18 +194,22 @@ button {
   text-align: center;
   color: var(--muted);
   margin-top: 40px;
-  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-align: center;
   color: var(--muted);
   margin-top: 48px;
-  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.empty-emoji {
+  font-size: 2.4rem;
 }
 
 .task-list {
@@ -216,79 +218,53 @@ button {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .task-card {
   position: relative;
   overflow: hidden;
   background: var(--card);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--status-todo);
-  border-radius: 10px;
+  border: 2px solid var(--line);
+  border-radius: 20px;
   padding: 16px 18px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 14px;
-  transition: border-left-color 0.15s ease, box-shadow 0.15s ease,
-    transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .task-card:hover {
-  box-shadow: 0 4px 14px rgba(22, 36, 28, 0.08);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(183, 163, 255, 0.18);
 }
 
-.stamp {
-  position: absolute;
-  top: 10px;
-  right: 16px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--status-done);
-  border: 1.5px dashed var(--status-done);
-  border-radius: 999px;
-  padding: 3px 10px;
-  transform: rotate(-8deg);
-  animation: stamp-in 0.25s ease-out;
-  pointer-events: none;
-}
-
-@keyframes stamp-in {
-  from {
-    opacity: 0;
-    transform: rotate(-8deg) scale(1.6);
-  }
-  to {
-    opacity: 1;
-    transform: rotate(-8deg) scale(1);
-  }
+.task-card[data-status="To Do"] {
+  border-color: var(--lavender-soft);
 }
 
 .task-card[data-status="In Progress"] {
-  border-left-color: var(--status-progress);
+  border-color: var(--butter-soft);
 }
 
 .task-card[data-status="Done"] {
-  border-left-color: var(--status-done);
+  border-color: var(--mint-soft);
+  background: linear-gradient(180deg, #ffffff, var(--mint-soft) 220%);
 }
 
 .task-main h3 {
   margin: 0 0 4px;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.02rem;
+  font-size: 1.05rem;
 }
 
 .task-card[data-status="Done"] .task-main h3 {
-  color: var(--muted);
+  color: #5fae8e;
   text-decoration: line-through;
-  text-decoration-color: var(--status-done);
-  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--mint);
+  text-decoration-thickness: 2px;
 }
 
 .task-main p {
@@ -301,60 +277,86 @@ button {
 .task-actions {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
   align-items: flex-end;
   flex-shrink: 0;
 }
 
 .status-select {
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 999px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   font-family: var(--font-display);
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
-  appearance: none;
-  text-align: center;
-  padding-right: 24px;
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236f7568' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 .status-select[data-status="To Do"] {
-  color: var(--status-todo);
-  background-color: var(--status-todo-bg);
+  color: #7361c9;
+  background-color: var(--lavender-soft);
 }
 
 .status-select[data-status="In Progress"] {
-  color: var(--status-progress);
-  background-color: var(--status-progress-bg);
+  color: #b8862f;
+  background-color: var(--butter-soft);
 }
 
 .status-select[data-status="Done"] {
-  color: var(--status-done);
-  background-color: var(--status-done-bg);
+  color: #338866;
+  background-color: var(--mint-soft);
 }
 
 .delete-btn {
   background: none;
   border: none;
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   padding: 0;
-  font-family: var(--font-body);
+  font-weight: 700;
   transition: color 0.15s ease;
 }
 
 .delete-btn:hover {
-  color: var(--danger);
-  text-decoration: underline;
+  color: var(--pink);
+}
+
+.sparkles {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  pointer-events: none;
+}
+
+.spark {
+  position: absolute;
+  color: var(--mint);
+  font-size: 0.9rem;
+  animation: pop 0.6s ease-out;
+}
+
+.s1 { top: -2px; right: 0; animation-delay: 0s; }
+.s2 { top: 6px; right: 14px; font-size: 0.65rem; animation-delay: 0.08s; }
+.s3 { top: 10px; right: -6px; font-size: 0.7rem; animation-delay: 0.16s; }
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-10deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.15) rotate(6deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
+    animation: none !important;
     transition: none !important;
   }
 }

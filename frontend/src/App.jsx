@@ -2,45 +2,25 @@
 
 const API_URL = "http://localhost:5000";
 const STATUSES = ["To Do", "In Progress", "Done"];
+const STATUS_EMOJI = { "To Do": "📝", "In Progress": "🌱", Done: "🎀" };
 
-function ProgressRing({ done, total }) {
-  const size = 56;
-  const stroke = 5;
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const pct = total === 0 ? 0 : done / total;
-  const offset = circumference * (1 - pct);
-
+function ProgressBlob({ done, total }) {
+  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   return (
-    <div className="ring-wrap">
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke="var(--line)"
-          strokeWidth={stroke}
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke="var(--accent)"
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          transform={`rotate(-90 ${size / 2} ${size / 2})`}
-          className="ring-progress"
-        />
-      </svg>
-      <div className="ring-label">
-        <strong>{done}</strong>
-        <span>/{total}</span>
-      </div>
+    <div className="blob">
+      <span className="blob-pct">{pct}%</span>
+      <span className="blob-label">tidied up</span>
     </div>
+  );
+}
+
+function Sparkles() {
+  return (
+    <span className="sparkles" aria-hidden="true">
+      <span className="spark s1">✦</span>
+      <span className="spark s2">✧</span>
+      <span className="spark s3">✦</span>
+    </span>
   );
 }
 
@@ -80,7 +60,7 @@ export default function App() {
     setFormError("");
 
     if (!title.trim()) {
-      setFormError("Title is required.");
+      setFormError("Give it a little title first!");
       return;
     }
 
@@ -119,7 +99,7 @@ export default function App() {
       });
       if (!res.ok) throw new Error();
     } catch (err) {
-      setTasks(prevTasks); // roll back on failure
+      setTasks(prevTasks);
       setError("Couldn't update that task. Try again.");
     }
   }
@@ -143,11 +123,11 @@ export default function App() {
       <header>
         <div className="header-top">
           <div>
-            <h1>Mini Task Tracker</h1>
-            <p className="subtitle">Every task, one honest status.</p>
+            <h1>Mini Task Tracker <span className="wave">🌸</span></h1>
+            <p className="subtitle">A cozy little list for cozy little wins.</p>
           </div>
           {!loading && tasks.length > 0 && (
-            <ProgressRing
+            <ProgressBlob
               done={tasks.filter((t) => t.status === "Done").length}
               total={tasks.length}
             />
@@ -157,61 +137,45 @@ export default function App() {
 
       <form className="task-form" onSubmit={handleCreate}>
         <div className="field">
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title">What's the task?</label>
           <input
             id="title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Draft project README"
+            placeholder="e.g. Water the plants 🪴"
           />
         </div>
         <div className="field">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description">Any little details?</label>
           <textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Optional details"
+            placeholder="Optional — jot down the specifics"
             rows={2}
           />
         </div>
         {formError && <p className="error">{formError}</p>}
         <button type="submit" disabled={submitting}>
-          {submitting ? "Adding..." : "Add Task"}
+          {submitting ? "Adding..." : "Add it! ✨"}
         </button>
       </form>
 
       {error && <p className="error banner">{error}</p>}
 
       {loading ? (
-        <p className="empty">Loading tasks...</p>
+        <p className="empty">Loading your tasks...</p>
       ) : tasks.length === 0 ? (
         <div className="empty-state">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-            <rect
-              x="6"
-              y="4"
-              width="28"
-              height="32"
-              rx="3"
-              stroke="var(--muted)"
-              strokeWidth="1.6"
-            />
-            <path
-              d="M13 14h14M13 20h14M13 26h9"
-              stroke="var(--muted)"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-            />
-          </svg>
-          <p>Nothing tracked yet. Add your first task above.</p>
+          <span className="empty-emoji">🌤️</span>
+          <p>All clear! Add your first task above.</p>
         </div>
       ) : (
         <ul className="task-list">
           {tasks.map((task) => (
             <li key={task.id} className="task-card" data-status={task.status}>
-              {task.status === "Done" && <span className="stamp">Done</span>}
+              {task.status === "Done" && <Sparkles />}
               <div className="task-main">
                 <h3>{task.title}</h3>
                 {task.description && <p>{task.description}</p>}
@@ -225,7 +189,7 @@ export default function App() {
                 >
                   {STATUSES.map((s) => (
                     <option key={s} value={s}>
-                      {s}
+                      {STATUS_EMOJI[s]} {s}
                     </option>
                   ))}
                 </select>
@@ -233,7 +197,7 @@ export default function App() {
                   className="delete-btn"
                   onClick={() => deleteTask(task.id)}
                 >
-                  Delete
+                  remove
                 </button>
               </div>
             </li>
